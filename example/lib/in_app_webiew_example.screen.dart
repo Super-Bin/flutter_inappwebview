@@ -23,11 +23,21 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
+        /// 打开这个，才能接收到回调
         useShouldOverrideUrlLoading: true,
         mediaPlaybackRequiresUserGesture: false,
+        transparentBackground: true,
+        allowFileAccessFromFileURLs: true,
+        allowUniversalAccessFromFileURLs: true,
       ),
       android: AndroidInAppWebViewOptions(
+        /// 打开这个则不能使用，Offstage
         useHybridComposition: true,
+        blockNetworkImage: false,
+        mixedContentMode:
+        AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+
+        allowFileAccess: true,
       ),
       ios: IOSInAppWebViewOptions(
         allowsInlineMediaPlayback: true,
@@ -122,9 +132,9 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                   InAppWebView(
                     key: webViewKey,
                     // contextMenu: contextMenu,
-                    initialUrlRequest:
-                    URLRequest(url: Uri.parse("https://github.com/flutter")),
-                    // initialFile: "assets/index.html",
+                    // initialUrlRequest:
+                    // URLRequest(url: Uri.parse("https://github.com/flutter")),
+                    initialFile: "assets/index.html",
                     initialUserScripts: UnmodifiableListView<UserScript>([]),
                     initialOptions: options,
                     pullToRefreshController: pullToRefreshController,

@@ -35,8 +35,23 @@
                 <p>Cover template for <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
                 <p>Phone link example <a href="tel:1-408-555-5555">1-408-555-5555</a></p>
                 <p>Email link example <a href="mailto:example@gmail.com">example@gmail.com</a></p>
+                <p>Email link example <a href="weixin://dl/business/?t=4CqitYNbiUm">唤起小程序</a></p>
             </div>
         </footer>
+
+        <form method="POST" enctype="multipart/form-data">
+            File to upload: <input type="file" name="uploadfile">
+            <div></div>
+
+            拍照File to upload:<input accept="image/*" capture="user" id="imgFile" name="imgFile" type="file">
+            <div></div>
+
+            拍照没有capture:<input accept="image/*" id="imgFile2" name="imgFile"  type="file">
+            <div></div>
+            拍照222File to upload:<input type="file" accept="image/*" capture>
+            <div></div>
+            <input type="submit" value="Press to Upload..."> to upload the file!
+        </form>
     </div>
     <script src="js/main.js"></script>
 </body>
