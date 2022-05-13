@@ -1,3 +1,6 @@
+## 5.3.2+1
+- Android修改源码，需要判断存储权限才能打开图库、拍照功能
+
 ## 5.3.2
 
 - Added `onLoad` and `onError` callbacks in `ScriptHtmlTagAttributes` class used by `InAppWebViewController.injectJavascriptFileFromUrl`
