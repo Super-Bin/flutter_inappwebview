@@ -100,6 +100,7 @@ class InAppWebViewController {
         localStorage: LocalStorage(this), sessionStorage: SessionStorage(this));
   }
 
+  /// 原生调用Flutter方法
   Future<dynamic> handleMethod(MethodCall call) async {
     switch (call.method) {
       case "onLoadStart":
@@ -579,6 +580,26 @@ class InAppWebViewController {
             return (await _inAppBrowser!
                     .androidOnPermissionRequest(origin, resources))
                 ?.toMap();
+        }
+        break;
+      /// 新加入，安卓请求拍照、相册权限
+      case "onFilePermissionRequest":
+        if ((_webview != null &&
+            _webview!.androidOnFilePermissionRequest != null) ||
+            _inAppBrowser != null) {
+          List<String> needPermissions = call.arguments["needPermissions"].cast<String>();
+          if (_webview != null && _webview!.androidOnFilePermissionRequest != null){
+            await _webview!.androidOnFilePermissionRequest!(
+                this, needPermissions);
+            return "我是返回给Flutter的值";
+          } else {
+           await _inAppBrowser!
+                .androidOnFilePermissionRequest(needPermissions);
+           return "默认返回给Flutter的值";
+          }
+
+        }else {
+          return "两个都没有的情况，默认返回给Flutter的值";
         }
         break;
       case "onUpdateVisitedHistory":

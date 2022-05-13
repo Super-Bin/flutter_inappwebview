@@ -80,6 +80,7 @@ class InAppWebView extends StatefulWidget implements WebView {
     this.onZoomScaleChanged,
     this.androidOnSafeBrowsingHit,
     this.androidOnPermissionRequest,
+    this.androidOnFilePermissionRequest,
     this.androidOnGeolocationPermissionsShowPrompt,
     this.androidOnGeolocationPermissionsHidePrompt,
     this.androidShouldInterceptRequest,
@@ -116,6 +117,11 @@ class InAppWebView extends StatefulWidget implements WebView {
       InAppWebViewController controller,
       String origin,
       List<String> resources)? androidOnPermissionRequest;
+
+  @override
+  final Future<void> Function(
+      InAppWebViewController controller,
+      List<String> needPermissions)? androidOnFilePermissionRequest;
 
   @override
   final Future<SafeBrowsingResponse?> Function(

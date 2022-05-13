@@ -176,6 +176,13 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
 
                       return NavigationActionPolicy.ALLOW;
                     },
+                  androidOnFilePermissionRequest: (
+                      InAppWebViewController controller,
+                      List<String> needPermissions) async {
+                      print("Flutter接收到android返回的数据，需要权限 $needPermissions");
+
+
+                  },
                     onLoadStop: (controller, url) async {
                       pullToRefreshController.endRefreshing();
                       setState(() {

@@ -752,11 +752,39 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-    String[] acceptTypes = fileChooserParams.getAcceptTypes();
-    Log.i("zzb", "进来了onShowFileChooser = " + acceptTypes);
-    boolean allowMultiple = fileChooserParams.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE;
-    Intent intent = fileChooserParams.createIntent();
-    return startPhotoPickerIntent(filePathCallback, intent, acceptTypes, allowMultiple);
+
+    boolean hasPermission = false;
+    // 是否需要拍照权限
+    boolean fromCamera = fileChooserParams.isCaptureEnabled();
+    Log.i("zzb", "H5是否需要拍照权限 = " + fromCamera);
+    List<String> needPermissionList = new ArrayList<>();
+    // 检测相机和相册权限，以相册权限为标准
+    Activity activity = inAppBrowserDelegate != null ? inAppBrowserDelegate.getActivity() : plugin.activity;
+    if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+      needPermissionList.add("camera");
+    }
+    if(ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+      hasPermission = true;
+    }else {
+      hasPermission = false;
+      needPermissionList.add("storage");
+    }
+
+    if(!hasPermission){
+      Map<String, Object> obj = new HashMap<>();
+      obj.put("needPermissions", needPermissionList);
+      // 通知Flutter需要的权限
+      channel.invokeMethod("onFilePermissionRequest", obj);
+      return false;
+    }else {
+
+      String[] acceptTypes = fileChooserParams.getAcceptTypes();
+      Log.i("zzb", "进来了onShowFileChooser = " + acceptTypes);
+      boolean allowMultiple = fileChooserParams.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE;
+      Intent intent = fileChooserParams.createIntent();
+      return startPhotoPickerIntent(filePathCallback, intent, acceptTypes, allowMultiple);
+    }
+
   }
 
   @Override
@@ -879,8 +907,9 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public boolean startPhotoPickerIntent(final ValueCallback<Uri[]> callback, final Intent intent, final String[] acceptTypes, final boolean allowMultiple) {
-    InAppWebViewFlutterPlugin.filePathCallback = callback;
 
+    InAppWebViewFlutterPlugin.filePathCallback = callback;
+    
     ArrayList<Parcelable> extraIntents = new ArrayList<>();
     if (!needsCameraPermission()) {
       if (acceptsImages(acceptTypes)) {
@@ -903,7 +932,6 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     } else {
       Log.d(LOG_TAG, "there is no Activity to handle this Intent");
     }
-
     return true;
   }
 
@@ -914,13 +942,16 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     PackageManager packageManager = activity.getPackageManager();
     try {
       String[] requestedPermissions = packageManager.getPackageInfo(activity.getApplicationContext().getPackageName(), PackageManager.GET_PERMISSIONS).requestedPermissions;
+      Log.i("zzb", "检查CAMERA权限 " + ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA));
       if (Arrays.asList(requestedPermissions).contains(Manifest.permission.CAMERA)
               && ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
         needed = true;
       }
     } catch (PackageManager.NameNotFoundException e) {
+      Log.i("zzb", "needsCameraPermission NameNotFoundException = " + e);
       needed = true;
     }
+    Log.i("zzb", "needsCameraPermission needed = " + needed);
 
     return needed;
   }
