@@ -64,12 +64,24 @@
                 alert("点击")
             }
 
-        window.addEventListener('message', function( message ){
-        try{
-        }
+<!--        window.addEventListener('message', function( message ){-->
+<!--            console.log("图片地址", message);-->
+<!--            alert(message)-->
+<!--        });-->
+
+<!--        window.addEventListener('message', ( message ) => {-->
+<!--            console.log("图片地址", message);-->
+<!--            alert(message)-->
+<!--        });-->
+
+        window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+
+            console.log("初始化完成");
+            window.addEventListener('message', ( message ) => {
             console.log("图片地址", message);
             alert(message)
         });
+              });
     </script>
 </body>
 </html>

@@ -21,6 +21,26 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
 
   final GlobalKey webViewKey = GlobalKey();
 
+  final String messageMsg =  """window.addEventListener('message', function( message ){
+    let action = JSON.parse(message.data);
+    console.log("返回首页地址", action.value);
+    
+    if(action.Name == "goBackHome"){
+      location.href = action.url;
+    }
+  })""";
+  final String messageMsg2 =  """window.addEventListener("message",function(msg){
+	try{
+		console.log(">>>>>>msg",msg);
+		var t=JSON.parse(msg.data);
+		if(console.log(">>>>data",t),t.method)
+		switch(t.method){
+		}
+	}catch(e){
+		console.log(">>>报错", e)
+	}
+})""";
+
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
@@ -135,6 +155,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                     // contextMenu: contextMenu,
                     // initialUrlRequest:
                     // URLRequest(url: Uri.parse("https://github.com/flutter")),
+
                     initialFile: "assets/index.html",
                     initialUserScripts: UnmodifiableListView<UserScript>([]),
                     initialOptions: options,
@@ -143,6 +164,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                       webViewController = controller;
                     },
                     onLoadStart: (controller, url) {
+                      // controller.evaluateJavascript(source: messageMsg);
                       setState(() {
                         this.url = url.toString();
                         urlController.text = this.url;
@@ -182,7 +204,6 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                       List<String> needPermissions) async {
                       print("Flutter接收到android返回的数据，需要权限 $needPermissions");
 
-
                   },
                     onLoadStop: (controller, url) async {
                       pullToRefreshController.endRefreshing();
@@ -190,6 +211,8 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                         this.url = url.toString();
                         urlController.text = this.url;
                       });
+                      /// ceshi
+                      await controller.evaluateJavascript(source: messageMsg);
                     },
                     onLoadError: (controller, url, code, message) {
                       pullToRefreshController.endRefreshing();
@@ -236,7 +259,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                     "method": "asd",
                     "value": "123456",
                   };
-                  if(AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.fromValue("POST_WEB_MESSAGE")!) == true){
+                  if(await AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.fromValue("POST_WEB_MESSAGE")!)){
                     print("zzb我支持这个功能");
                   }else {
                     print("zzb我走到这里");
