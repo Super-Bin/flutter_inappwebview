@@ -36,6 +36,7 @@
                 <p>Phone link example <a href="tel:1-408-555-5555">1-408-555-5555</a></p>
                 <p>Email link example <a href="mailto:example@gmail.com">example@gmail.com</a></p>
                 <p>Email link example <a href="weixin://dl/business/?t=4CqitYNbiUm">唤起小程序</a></p>
+                <button onclick="testHistoryPush1()">我是点击</button>
             </div>
         </footer>
 
@@ -57,5 +58,18 @@
         </form>
     </div>
     <script src="js/main.js"></script>
+    <script>
+        function testHistoryPush1() {
+                var randomNumber = 100 * Math.random();
+                alert("点击")
+            }
+
+        window.addEventListener('message', function( message ){
+        try{
+        }
+            console.log("图片地址", message);
+            alert(message)
+        });
+    </script>
 </body>
 </html>

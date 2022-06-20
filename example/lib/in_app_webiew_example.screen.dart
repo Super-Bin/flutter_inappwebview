@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 // import 'dart:convert';
 import 'dart:io';
 // import 'dart:typed_data';
@@ -229,8 +230,18 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
               ),
               ElevatedButton(
                 child: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  webViewController?.goForward();
+                onPressed: () async{
+                  // webViewController?.goForward();
+                  Map params = {
+                    "method": "asd",
+                    "value": "123456",
+                  };
+                  if(AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.fromValue("POST_WEB_MESSAGE")!) == true){
+                    print("zzb我支持这个功能");
+                  }else {
+                    print("zzb我走到这里");
+                  }
+                  webViewController?.postWebMessage(message: WebMessage(data: json.encode(params)));
                 },
               ),
               ElevatedButton(

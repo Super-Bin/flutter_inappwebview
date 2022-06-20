@@ -2195,7 +2195,7 @@ class InAppWebViewController {
   ///A target origin can be set as a wildcard ("*"). However this is not recommended.
   ///
   ///**NOTE for Android**: This method should only be called if [AndroidWebViewFeature.isFeatureSupported] returns `true` for [AndroidWebViewFeature.POST_WEB_MESSAGE].
-  ///
+  ///AndroidManifest
   ///**NOTE for iOS**: This is implemented using Javascript.
   ///
   ///**Official Android API**: https://developer.android.com/reference/androidx/webkit/WebViewCompat#postWebMessage(android.webkit.WebView,%20androidx.webkit.WebMessageCompat,%20android.net.Uri)
