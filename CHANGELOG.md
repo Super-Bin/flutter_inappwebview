@@ -1,3 +1,6 @@
+## 5.3.2+2
+- Ios 修复applicationNameForUserAgent属性
+
 ## 5.3.2+1
 - Android修改源码，需要判断存储权限才能打开图库、拍照功能
 
