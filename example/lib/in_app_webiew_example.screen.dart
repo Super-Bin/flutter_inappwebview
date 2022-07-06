@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 // import 'dart:convert';
 import 'dart:io';
 // import 'dart:typed_data';
@@ -19,13 +20,44 @@ class InAppWebViewExampleScreen extends StatefulWidget {
 class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
   final GlobalKey webViewKey = GlobalKey();
 
+  final String messageMsg =  """window.addEventListener('message', function( message ){
+    let action = JSON.parse(message.data);
+    console.log("返回首页地址", action.value);
+    
+    if(action.Name == "goBackHome"){
+      location.href = action.url;
+    }
+  })""";
+  final String messageMsg2 =  """window.addEventListener("message",function(msg){
+	try{
+		console.log(">>>>>>msg",msg);
+		var t=JSON.parse(msg.data);
+		if(console.log(">>>>data",t),t.method)
+		switch(t.method){
+		}
+	}catch(e){
+		console.log(">>>报错", e)
+	}
+})""";
+
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
-          useShouldOverrideUrlLoading: true,
-          mediaPlaybackRequiresUserGesture: false),
+        /// 打开这个，才能接收到回调
+        useShouldOverrideUrlLoading: true,
+        mediaPlaybackRequiresUserGesture: false,
+        transparentBackground: true,
+        allowFileAccessFromFileURLs: true,
+        allowUniversalAccessFromFileURLs: true,
+      ),
       android: AndroidInAppWebViewOptions(
+        /// 打开这个则不能使用，Offstage
         useHybridComposition: true,
+        blockNetworkImage: false,
+        mixedContentMode:
+        AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+
+        allowFileAccess: true,
       ),
       ios: IOSInAppWebViewOptions(
         allowsInlineMediaPlayback: true,
@@ -117,16 +149,16 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                 InAppWebView(
                   key: webViewKey,
                   // contextMenu: contextMenu,
-                  initialUrlRequest:
-                      URLRequest(url: Uri.parse("https://github.com/flutter")),
-                  // initialFile: "assets/index.html",
+                  //initialUrlRequest:
+                      //URLRequest(url: Uri.parse("https://github.com/flutter")),
+                   initialFile: "assets/index.html",
                   initialUserScripts: UnmodifiableListView<UserScript>([]),
                   initialOptions: options,
                   pullToRefreshController: pullToRefreshController,
                   onWebViewCreated: (controller) {
                     webViewController = controller;
                   },
-                  onLoadStart: (controller, url) {
+                  onLoadStart: (controller, url) {// controller.evaluateJavascript(source: messageMsg);
                     setState(() {
                       this.url = url.toString();
                       urlController.text = this.url;
@@ -163,12 +195,18 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
 
                     return NavigationActionPolicy.ALLOW;
                   },
-                  onLoadStop: (controller, url) async {
+                  androidOnFilePermissionRequest: (
+                      InAppWebViewController controller,
+                      List<String> needPermissions) async {
+                      print("Flutter接收到android返回的数据，需要权限 $needPermissions");
+
+                  },onLoadStop: (controller, url) async {
                     pullToRefreshController.endRefreshing();
                     setState(() {
                       this.url = url.toString();
                       urlController.text = this.url;
-                    });
+                    });/// ceshi
+                      await controller.evaluateJavascript(source: messageMsg);
                   },
                   onLoadError: (controller, url, code, message) {
                     pullToRefreshController.endRefreshing();
@@ -209,8 +247,18 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
               ),
               ElevatedButton(
                 child: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  webViewController?.goForward();
+                onPressed: () async{
+                  // webViewController?.goForward();
+                  Map params = {
+                    "method": "asd",
+                    "value": "123456",
+                  };
+                  if(await AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.fromValue("POST_WEB_MESSAGE")!)){
+                    print("zzb我支持这个功能");
+                  }else {
+                    print("zzb我走到这里");
+                  }
+                  webViewController?.postWebMessage(message: WebMessage(data: json.encode(params)));
                 },
               ),
               ElevatedButton(

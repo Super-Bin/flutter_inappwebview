@@ -1,3 +1,6 @@
+## 5.3.2+7-zzb
+- Ios 修复applicationNameForUserAgent属性
+
 ## 5.4.3+7
 
 - Fixed possible Android java.lang.NullPointerException in "InAppBrowserActivity.onCreateOptionsMenu" about "webView.getTitle()"
@@ -45,7 +48,7 @@
 
 ## 5.4.1+1
 
-- Fixed Android default context menu over custom context menu on API Level 31+ 
+- Fixed Android default context menu over custom context menu on API Level 31+
 
 ## 5.4.1
 
