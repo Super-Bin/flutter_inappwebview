@@ -88,8 +88,8 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
 
     platformUtil = new PlatformUtil(this);
     inAppWebViewStatic = new InAppWebViewStatic(this);
-    myCookieManager = new MyCookieManager(this);
-    myWebStorage = new MyWebStorage(this);
+//    myCookieManager = new MyCookieManager(this);
+//    myWebStorage = new MyWebStorage(this);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       serviceWorkerManager = new ServiceWorkerManager(this);
     }
@@ -167,5 +167,20 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
   public void onDetachedFromActivity() {
     this.activityPluginBinding = null;
     this.activity = null;
+  }
+
+  /**
+   * 由于小米平台检测，这两个初始化，会导致以下问题，
+   * 未经许可读取个人信息 | 获取应用列表
+   * 等同意后再初始化。
+   */
+  public void initInAppWebView(){
+    if(myCookieManager != null){
+      myCookieManager = new MyCookieManager(this);
+    }
+    if(myWebStorage != null){
+      myWebStorage = new MyWebStorage(this);
+    }
+
   }
 }

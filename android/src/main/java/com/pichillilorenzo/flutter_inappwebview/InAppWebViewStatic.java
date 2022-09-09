@@ -107,6 +107,12 @@ public class InAppWebViewStatic implements MethodChannel.MethodCallHandler {
         }
         result.success(true);
         break;
+      case "initInAppWebView":
+      {
+        this.plugin.initInAppWebView();
+      }
+      result.success(true);
+      break;
       default:
         result.notImplemented();
     }

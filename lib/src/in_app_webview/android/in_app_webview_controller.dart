@@ -203,4 +203,11 @@ class AndroidInAppWebViewController {
     return await _staticChannel.invokeMethod(
         'setWebContentsDebuggingEnabled', args);
   }
+
+  /// 同意隐私政策后，再初始化MyCookieManager、MyWebStorage
+  /// **NOTE**: available only on Android .
+  static Future<void> initInAppWebView() async {
+    return await _staticChannel.invokeMethod(
+        'initInAppWebView');
+  }
 }
