@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.ValueCallback;
 
 import androidx.annotation.Nullable;
@@ -88,11 +89,12 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
 
     platformUtil = new PlatformUtil(this);
     inAppWebViewStatic = new InAppWebViewStatic(this);
+    // 放到下面初始化
 //    myCookieManager = new MyCookieManager(this);
 //    myWebStorage = new MyWebStorage(this);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      serviceWorkerManager = new ServiceWorkerManager(this);
-    }
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//      serviceWorkerManager = new ServiceWorkerManager(this);
+//    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       credentialDatabaseHandler = new CredentialDatabaseHandler(this);
     }
@@ -182,5 +184,12 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
       myWebStorage = new MyWebStorage(this);
     }
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      serviceWorkerManager = new ServiceWorkerManager(this);
+    }
+
+    Log.i("zzb", "initInAppWebView myCookieManager = " + myCookieManager
+            + " myWebStorage = " + myWebStorage
+            + " serviceWorkerManager = " + serviceWorkerManager);
   }
 }
