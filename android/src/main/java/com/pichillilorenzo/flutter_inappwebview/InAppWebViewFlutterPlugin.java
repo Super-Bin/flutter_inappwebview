@@ -177,14 +177,14 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
    * 等同意后再初始化。
    */
   public void initInAppWebView(){
-    if(myCookieManager != null){
+    if(myCookieManager == null){
       myCookieManager = new MyCookieManager(this);
     }
-    if(myWebStorage != null){
+    if(myWebStorage == null){
       myWebStorage = new MyWebStorage(this);
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && serviceWorkerManager == null) {
       serviceWorkerManager = new ServiceWorkerManager(this);
     }
 
