@@ -1,3 +1,6 @@
+## 5.3.2+7-5
+- 适配ios16
+
 ## 5.3.2+7-4
 - Android同意隐私政策后，再调用initInAppWebView
 
