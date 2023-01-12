@@ -1,3 +1,9 @@
+## 5.6.0+2-1
+- 基于5.6.0+2的版本，适配Android13
+- H5打开图库，先判断权限，再打开图库。主要修改文件InAppWebViewChromeClient.java、in_app_browser.dart、headless_in_app_webview.dart、
+in_app_webview.dart、in_app_webview_controller.dart、webview.dart
+- 小米应用商店上架审核，参考v5.7.2+3分支的提交，将代码拷贝过来。https://github.com/pichillilorenzo/flutter_inappwebview/issues/1462
+
 ## 5.6.0+2
 
 - Revert back the usage of `PlatformViewsService.initExpensiveAndroidView`
