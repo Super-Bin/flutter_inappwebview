@@ -709,6 +709,13 @@ class InAppBrowser {
     return null;
   }
 
+  /// 新加入，安卓请求拍照、相册权限
+  Future<void>? androidOnFilePermissionRequest(
+      List<String> needPermissions) {
+        return null;
+
+  }
+
   ///Event that notifies the host application that web content from the specified origin is attempting to use the Geolocation API, but no permission state is currently set for that origin.
   ///Note that for applications targeting Android N and later SDKs (API level > `Build.VERSION_CODES.M`) this method is only called for requests originating from secure origins such as https.
   ///On non-secure origins geolocation requests are automatically denied.

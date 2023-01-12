@@ -793,10 +793,51 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
   public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-    String[] acceptTypes = fileChooserParams.getAcceptTypes();
-    boolean allowMultiple = fileChooserParams.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE;
-    boolean captureEnabled = fileChooserParams.isCaptureEnabled();
-    return startPickerIntent(filePathCallback, acceptTypes, allowMultiple, captureEnabled);
+    boolean hasPermission = false;
+    // 是否需要拍照权限
+    boolean fromCamera = fileChooserParams.isCaptureEnabled();
+    Log.i("zzb", "H5是否需要拍照权限 = " + fromCamera);
+    List<String> needPermissionList = new ArrayList<>();
+    Activity activity = getActivity();
+    if (activity == null) {
+      return false;
+    }
+    // 检测相机和相册权限，以相册权限为标准
+    if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+      needPermissionList.add("camera");
+    }
+    // 存储权限需要判断,适配android13
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED &&
+              ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED) {
+        hasPermission = true;
+      }else {
+        hasPermission = false;
+        needPermissionList.add("photos");
+      }
+    }else {
+      if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        hasPermission = true;
+      } else {
+        hasPermission = false;
+        needPermissionList.add("storage");
+      }
+    }
+
+    if(!hasPermission){
+      Map<String, Object> obj = new HashMap<>();
+      obj.put("needPermissions", needPermissionList);
+      // 通知Flutter需要的权限
+      channel.invokeMethod("onFilePermissionRequest", obj);
+      return false;
+    }else {
+      String[] acceptTypes = fileChooserParams.getAcceptTypes();
+      Log.i("zzb", "进来了onShowFileChooser = " + acceptTypes);
+      boolean allowMultiple = fileChooserParams.getMode() == WebChromeClient.FileChooserParams.MODE_OPEN_MULTIPLE;
+      boolean captureEnabled = fileChooserParams.isCaptureEnabled();
+      return startPickerIntent(filePathCallback, acceptTypes, allowMultiple, captureEnabled);
+    }
+
   }
 
   @Override

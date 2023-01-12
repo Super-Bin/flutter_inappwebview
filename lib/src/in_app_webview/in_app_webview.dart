@@ -82,6 +82,7 @@ class InAppWebView extends StatefulWidget implements WebView {
     this.onZoomScaleChanged,
     this.androidOnSafeBrowsingHit,
     this.androidOnPermissionRequest,
+    this.androidOnFilePermissionRequest,
     this.androidOnGeolocationPermissionsShowPrompt,
     this.androidOnGeolocationPermissionsHidePrompt,
     this.androidShouldInterceptRequest,
@@ -118,6 +119,14 @@ class InAppWebView extends StatefulWidget implements WebView {
       InAppWebViewController controller,
       String origin,
       List<String> resources)? androidOnPermissionRequest;
+
+  /// 新加入，安卓请求拍照、相册权限
+  /// [needPermissions]，返回字符串"camera"、"storage"、"photos"表示需要的权限
+  /// "photos"用在android13上，替代"storage"
+  @override
+  final Future<void> Function(
+      InAppWebViewController controller,
+      List<String> needPermissions)? androidOnFilePermissionRequest;
 
   @override
   final Future<SafeBrowsingResponse?> Function(

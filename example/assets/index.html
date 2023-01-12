@@ -35,9 +35,53 @@
                 <p>Cover template for <a target="_blank" href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
                 <p>Phone link example <a href="tel:1-408-555-5555">1-408-555-5555</a></p>
                 <p>Email link example <a href="mailto:example@gmail.com">example@gmail.com</a></p>
+                <p>Email link example <a href="weixin://dl/business/?t=4CqitYNbiUm">唤起小程序</a></p>
+                <button onclick="testHistoryPush1()">我是点击</button>
             </div>
         </footer>
+
+        <form method="POST" enctype="multipart/form-data">
+            File to upload: <input type="file" name="uploadfile">
+            <div></div>
+
+            拍照File to upload:<input accept="image/*" capture="user" id="imgFile" name="imgFile" type="file">
+            <div></div>
+
+            拍照没有capture:<input accept="image/*" id="imgFile2" name="imgFile"  type="file">
+            <div></div>
+            拍照222File to upload:<input type="file" accept="image/*" capture>
+            <div></div>
+            <!--安卓上的多图选择，要长按选中            -->
+            多图选择:<input type="file" accept="image/*" multiple>
+            <div></div>
+            <input type="submit" value="Press to Upload..."> to upload the file!
+        </form>
     </div>
     <script src="js/main.js"></script>
+    <script>
+        function testHistoryPush1() {
+                var randomNumber = 100 * Math.random();
+                alert("点击")
+            }
+
+<!--        window.addEventListener('message', function( message ){-->
+<!--            console.log("图片地址", message);-->
+<!--            alert(message)-->
+<!--        });-->
+
+<!--        window.addEventListener('message', ( message ) => {-->
+<!--            console.log("图片地址", message);-->
+<!--            alert(message)-->
+<!--        });-->
+
+        window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+
+            console.log("初始化完成");
+            window.addEventListener('message', ( message ) => {
+            console.log("图片地址", message);
+            alert(message)
+        });
+              });
+    </script>
 </body>
 </html>

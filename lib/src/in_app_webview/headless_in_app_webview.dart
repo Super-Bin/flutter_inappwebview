@@ -92,6 +92,7 @@ class HeadlessInAppWebView implements WebView {
       this.onOverScrolled,
       this.androidOnSafeBrowsingHit,
       this.androidOnPermissionRequest,
+      this.androidOnFilePermissionRequest,
       this.androidOnGeolocationPermissionsShowPrompt,
       this.androidOnGeolocationPermissionsHidePrompt,
       this.androidShouldInterceptRequest,
@@ -243,6 +244,10 @@ class HeadlessInAppWebView implements WebView {
   @override
   Future<PermissionRequestResponse?> Function(InAppWebViewController controller,
       String origin, List<String> resources)? androidOnPermissionRequest;
+
+  @override
+  Future<void> Function(InAppWebViewController controller,
+      List<String> needPermissions)? androidOnFilePermissionRequest;
 
   @override
   Future<SafeBrowsingResponse?> Function(InAppWebViewController controller,

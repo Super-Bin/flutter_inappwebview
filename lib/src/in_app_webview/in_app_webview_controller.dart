@@ -594,6 +594,26 @@ class InAppWebViewController {
                 ?.toMap();
         }
         break;
+    /// 新加入，安卓请求拍照、相册权限
+      case "onFilePermissionRequest":
+        if ((_webview != null &&
+            _webview!.androidOnFilePermissionRequest != null) ||
+            _inAppBrowser != null) {
+          List<String> needPermissions = call.arguments["needPermissions"].cast<String>();
+          if (_webview != null && _webview!.androidOnFilePermissionRequest != null){
+            await _webview!.androidOnFilePermissionRequest!(
+                this, needPermissions);
+            return "我是返回给Flutter的值";
+          } else {
+            await _inAppBrowser!
+                .androidOnFilePermissionRequest(needPermissions);
+            return "默认返回给Flutter的值";
+          }
+
+        }else {
+          return "两个都没有的情况，默认返回给Flutter的值";
+        }
+        break;
       case "onUpdateVisitedHistory":
         if ((_webview != null && _webview!.onUpdateVisitedHistory != null) ||
             _inAppBrowser != null) {
