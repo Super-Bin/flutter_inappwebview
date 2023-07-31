@@ -813,7 +813,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
         hasPermission = true;
       }else {
         hasPermission = false;
-        needPermissionList.add("photos");
+        needPermissionList.add("photosVideo");
       }
     }else {
       if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

@@ -1,3 +1,5 @@
+## 5.6.0+2-2
+android13 权限名字改为"photosVideo"，便于理解，webview需要photos和videos权限
 ## 5.6.0+2-1
 - 基于5.6.0+2的版本，适配Android13
 - H5打开图库，先判断权限，再打开图库。主要修改文件InAppWebViewChromeClient.java、in_app_browser.dart、headless_in_app_webview.dart、
